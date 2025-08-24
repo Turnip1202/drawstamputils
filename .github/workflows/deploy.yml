@@ -4,7 +4,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - source  # 从 source 分支构建
+      - master  # 从 source 分支构建
 
 jobs:
   build-and-deploy:
