@@ -1,45 +1,43 @@
-name: Build and Deploy
+name: Deploy static content to Pages
 
 on:
   push:
-    branches:
-      - source
+    branches: ['master']
+  workflow_dispatch:
 
-# 设置权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 控制并发部署
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    environment: github-pages  # 添加环境指定
-    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 22
+          cache: 'npm'  # 使用 npm 缓存
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.14.4
-
-      - name: Install Dependencies
-        run: pnpm install
+      - name: Install dependencies
+        run: npm install  # 使用 npm 安装依赖
 
       - name: Build
-        run: pnpm build
+        run: npm run build  # 使用 npm 构建
+
+      - name: Verify build output
+        run: ls -la ./dist  # 检查构建输出
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -49,15 +47,6 @@ jobs:
         with:
           path: './dist'
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
