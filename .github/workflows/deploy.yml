@@ -8,7 +8,7 @@ on:
 permissions:
   contents: read
   pages: write
-  id-token: write
+  id-token: write  # 关键：用于 artifact 签名验证
 
 concurrency:
   group: 'pages'
@@ -23,24 +23,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
         with:
           version: 8
-      - name: Set up Node
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: 'pnpm'  # 如果你用 pnpm，这里建议统一为 pnpm 缓存（之前是 npm，可能冲突）
+
       - name: Install dependencies
-        run: npm install
+        run: pnpm install  # 对应上面的 pnpm 缓存
+
       - name: Build
-        run: npm run build
+        run: pnpm run build  # 确保构建成功，输出到 dist
+
+      - name: Verify build output
+        run: ls -la ./dist  # 新增：检查 dist 目录内容，方便排查
+
       - name: Setup Pages
-        uses: actions/configure-pages@v4  # 更新到 v4
+        uses: actions/configure-pages@v4
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3  # 更新到 v3
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: './dist'  # 确保路径正确
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v3  # 更新到 v3
+        uses: actions/deploy-pages@v3
