@@ -28,16 +28,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'  # 使用 npm 缓存
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install  # 使用 npm 安装依赖
+        run: npm install
 
       - name: Build
-        run: npm run build  # 使用 npm 构建
+        run: npm run build
 
-      - name: Verify build output
-        run: ls -la ./dist  # 检查构建输出
+      - name: Check build files
+        run: |
+          echo "Checking docs directory structure:"
+          ls -la ./docs  # 检查 docs 目录内容
+          echo "Checking index.html for asset paths:"
+          grep -oE 'src="[^"]+"' ./docs/index.html || true
+          grep -oE 'href="[^"]+"' ./docs/index.html || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -45,8 +50,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: './docs'  # 改为上传 docs 目录
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v3
