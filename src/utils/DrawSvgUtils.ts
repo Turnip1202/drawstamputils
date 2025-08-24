@@ -137,6 +137,7 @@ export class DrawSvgUtils {
         color: string
     ) {
         try {
+            console.log("draw star svg content", starConfig.svgPath)
             if (starConfig.svgPath.startsWith('<svg')) {
                 // 如果是SVG内容字符串
                 await this.drawSVGContent(

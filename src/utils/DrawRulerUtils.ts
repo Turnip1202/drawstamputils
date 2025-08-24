@@ -2,11 +2,9 @@ import { IShowRuler } from "../DrawStampTypes";
 
 export class DrawRulerUtils {
     private mmToPixel = 10
-    private rulerSize = 80
 
-    constructor(mmToPixel: number, rulerSize: number) {
+    constructor(mmToPixel: number) {
         this.mmToPixel = mmToPixel
-        this.rulerSize = rulerSize
     }   
 
     /**
@@ -98,7 +96,7 @@ export class DrawRulerUtils {
         const step = this.mmToPixel * 5; // 5mm的像素长度
 
         // 绘制垂直线
-        for (let x = this.rulerSize; x < width; x += step * scale) {
+        for (let x = rulerWidth; x < width; x += step * scale) {
             ctx.beginPath();
             ctx.moveTo(x, rulerHeight);
             ctx.lineTo(x, height);
@@ -106,7 +104,7 @@ export class DrawRulerUtils {
         }
 
         // 绘制水平线
-        for (let y = this.rulerSize; y < height; y += step * scale) {
+        for (let y = rulerHeight; y < height; y += step * scale) {
             ctx.beginPath();
             ctx.moveTo(rulerWidth, y);
             ctx.lineTo(width, y);

@@ -2,32 +2,9 @@ import { ICompany } from "../DrawStampTypes"
 
 export class DrawCompanyUtils {
     private mmToPixel = 10
-    // 添加存储文字路径的数组
-    private textPaths: Array<{
-        text: string,
-        path: Path2D,
-        type: 'company',
-        bounds: {
-            x: number,
-            y: number,
-            width: number,
-            height: number
-        }
-    }> = []
 
     constructor(mmToPixel: number) {
         this.mmToPixel = mmToPixel
-        this.textPaths = []
-    }
-
-    // 添加获取文字路径的方法
-    getTextPaths() {
-        return this.textPaths
-    }
-
-    // 清除文字路径
-    clearTextPaths() {
-        this.textPaths = []
     }
 
     // 添加绘制公司列表的方法
@@ -63,7 +40,6 @@ export class DrawCompanyUtils {
         radiusY: number,
         color: string
       ) {
-        this.clearTextPaths()
         const fontSize = company.fontHeight * this.mmToPixel
         const fontWeight = company.fontWeight || 'normal'
         ctx.save()
@@ -88,12 +64,7 @@ export class DrawCompanyUtils {
       
         // 计算字符位置时考虑椭圆文字调整
         if (company.adjustEllipseText) {
-          let halfCharCount = 0
-          if(characterCount % 2 !== 0){
-            halfCharCount = characterCount / 2
-          }else{
-            halfCharCount = (characterCount + 1) / 2
-          }
+          const halfCharCount = (characterCount + 1) / 2
       
           characters.forEach((char, index) => {
             // 计算当前字符的角度，包含椭圆调整
@@ -115,22 +86,6 @@ export class DrawCompanyUtils {
             // 根据旋转方向调整文字旋转角度
             ctx.rotate(angle + (company.rotateDirection === 'clockwise' ? -Math.PI/2 : Math.PI/2))
             ctx.scale(company.compression, 1)
-
-            // 创建文字路径
-            const path = new Path2D()
-            path.rect(-fontSize/2, -fontSize, fontSize, fontSize)
-            this.textPaths.push({
-                text: char,
-                path: path,
-                type: 'company',
-                bounds: {
-                    x: x - fontSize/2,
-                    y: y - fontSize,
-                    width: fontSize,
-                    height: fontSize
-                }
-            })
-
             ctx.fillText(char, 0, 0)
             ctx.restore()
           })
@@ -146,22 +101,6 @@ export class DrawCompanyUtils {
             ctx.translate(x, y)
             ctx.rotate(angle + (company.rotateDirection === 'clockwise' ? -Math.PI/2 : Math.PI/2))
             ctx.scale(company.compression, 1)
-
-            // 创建文字路径
-            const path = new Path2D()
-            path.rect(-fontSize/2, -fontSize, fontSize, fontSize)
-            this.textPaths.push({
-                text: char,
-                path: path,
-                type: 'company',
-                bounds: {
-                    x: x - fontSize/2,
-                    y: y - fontSize,
-                    width: fontSize,
-                    height: fontSize
-                }
-            })
-
             ctx.fillText(char, 0, 0)
             ctx.restore()
           })

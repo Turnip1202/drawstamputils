@@ -3,7 +3,7 @@ import { IAgingEffect, ICode, ICompany, IDrawImage, IDrawStampConfig, IDrawStar,
 export class InitDrawStampConfigsUtils {
 
     // 默认主色
-    private primaryColor: string = 'blue'
+    private primaryColor: string = '#ff0000'
 
     private ruler: IShowRuler = {
         showRuler: true,
@@ -81,13 +81,7 @@ export class InitDrawStampConfigsUtils {
         agingIntensity: 50,
         agingEffectParams: []
     }
-    // 外圈圆
-    private outBorder: IInnerCircle = {
-        drawInnerCircle: true,
-        innerCircleLineWidth: 1,
-        innerCircleLineRadiusX: 20,
-        innerCircleLineRadiusY: 15
-    }
+
     // 内圈圆
     private innerCircle: IInnerCircle = {
         drawInnerCircle: true,
@@ -174,8 +168,7 @@ export class InitDrawStampConfigsUtils {
         scale: 1,
         offsetX: 0,
         offsetY: 0,
-        mmToPixel: 0,
-        outBorder: this.outBorder
+        mmToPixel: 0
     }
 
 
